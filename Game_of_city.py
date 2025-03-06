@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+import random
 
 
 @dataclass
@@ -40,4 +41,30 @@ class CitiesSerializer:
         
     def get_all_cities(self):
         return self.cities
+
+class CityGame:
+    def __init__(self, cities_serializer):
+        self.cities = cities_serializer.get_all_cities()
+        self.used_cities = set()
+        self.last_letter = ''
     
+    def start_game(self):
+        city = self.random.choice(self.cities)
+        self.used_cities.add(city.name)
+        self.last_letter = city.name[-1]
+        print('Привет! Мы начинаем игру в города. Нужно писать города, которые оканчиваются на букву предыдущего города.')
+        print(f"Начало игры. Город: {city.name}")
+        
+    def human_turn(self):
+        while True:
+            city_name = input("Введите название города: ")
+            if city_name in self.used_cities:
+                print("Этот город уже использован. Попробуйте другой город.")
+                continue
+            if city_name[0] != self.last_letter:
+                print("Название города должно начинаться с буквы, на которую заканчивается предыдущий город.")
+                continue
+            self.used_cities.add(city_name)
+            self.last_letter = city_name[-1]
+            print(f"Вы ввели город: {city_name}")
+            break
